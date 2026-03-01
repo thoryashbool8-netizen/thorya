@@ -6,108 +6,118 @@ class PlacesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Tourist Places")),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        // حذفنا const من ListView لأننا نستخدم context داخل Navigator
-        children: [
-          PlaceCard(
-            title: "Petra",
-            description: "Ancient city carved into red rock.",
-            imagePath: "assets/images/petra1.jpg",
-            onTap: () {
-              // عند الضغط يتم فتح صفحة التفاصيل الخاصة بالبتراء
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PlaceDetailsPage(
-                    title: "Petra",
-                    imagePath: "assets/images/petra1.jpg",
-                    details:
-                        "Petra is one of Jordan’s most famous attractions. It is an ancient city carved into rose-red rock and is considered one of the New Seven Wonders of the World.",
+    return Directionality(
+      textDirection: TextDirection.rtl, // ✅ اتجاه عربي
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("المعالم السياحية"),
+          centerTitle: true,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            PlaceCard(
+              title: "البتراء",
+              description: "مدينة أثرية منحوتة في الصخور الوردية.",
+              imagePath: "assets/images/petra1.jpg",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PlaceDetailsPage(
+                      title: "البتراء",
+                      imagePath: "assets/images/petra1.jpg",
+                      details:
+                          "تُعد البتراء من أشهر المعالم السياحية في الأردن. هي مدينة تاريخية منحوتة في الصخور الوردية وتُعتبر واحدة من عجائب الدنيا السبع الجديدة.",
+                      placeLat: 30.3285,
+                      placeLng: 35.4444,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-          PlaceCard(
-            title: "Wadi Rum",
-            description: "Desert valley with stunning landscapes.",
-            imagePath: "assets/images/wadirum1.jpg",
-            onTap: () {
-              // الانتقال إلى صفحة تفاصيل وادي رم
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PlaceDetailsPage(
-                    title: "Wadi Rum",
-                    imagePath: "assets/images/wadirum1.jpg",
-                    details:
-                        "Wadi Rum is a beautiful desert in southern Jordan, famous for red sand, mountains, and adventure trips like jeep tours and camping.",
+                );
+              },
+            ),
+            PlaceCard(
+              title: "وادي رم",
+              description: "صحراء ساحرة بمناظر طبيعية رائعة.",
+              imagePath: "assets/images/wadirum1.jpg",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PlaceDetailsPage(
+                      title: "وادي رم",
+                      imagePath: "assets/images/wadirum1.jpg",
+                      details:
+                          "وادي رم من أجمل صحارى الأردن، مشهور بالرمال الحمراء والجبال ورحلات المغامرة مثل الجولات بالجيب والتخييم.",
+                      placeLat: 29.5764,
+                      placeLng: 35.4195,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-          PlaceCard(
-            title: "Jerash",
-            description: "Roman ruins and historic architecture.",
-            imagePath: "assets/images/jerash1.jpg",
-            onTap: () {
-              // فتح صفحة تفاصيل جرش عند الضغط على البطاقة
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PlaceDetailsPage(
-                    title: "Jerash",
-                    imagePath: "assets/images/jerash1.jpg",
-                    details:
-                        "Jerash is one of the best-preserved Roman cities in the world. It includes columns, theaters, temples, and amazing ancient streets.",
+                );
+              },
+            ),
+            PlaceCard(
+              title: "جرش",
+              description: "آثار رومانية ومعمار تاريخي مميز.",
+              imagePath: "assets/images/jerash1.jpg",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PlaceDetailsPage(
+                      title: "جرش",
+                      imagePath: "assets/images/jerash1.jpg",
+                      details:
+                          "تُعتبر جرش من أفضل المدن الرومانية المحفوظة في العالم، وتضم أعمدة ومدرجات ومعابد وشوارع أثرية مدهشة.",
+                      placeLat: 32.2769,
+                      placeLng: 35.8906,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-          PlaceCard(
-            title: "Dead Sea",
-            description: "Lowest point on Earth and very salty water.",
-            imagePath: "assets/images/deadsea1.jpg",
-            onTap: () {
-              // الانتقال إلى صفحة البحر الميت
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PlaceDetailsPage(
-                    title: "Dead Sea",
-                    imagePath: "assets/images/deadsea1.jpg",
-                    details:
-                        "The Dead Sea is the lowest point on Earth. Its water is extremely salty, allowing people to float easily, and it is known for natural minerals.",
+                );
+              },
+            ),
+            PlaceCard(
+              title: "البحر الميت",
+              description: "أخفض نقطة على سطح الأرض ومياهه شديدة الملوحة.",
+              imagePath: "assets/images/deadsea1.jpg",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PlaceDetailsPage(
+                      title: "البحر الميت",
+                      imagePath: "assets/images/deadsea1.jpg",
+                      details:
+                          "البحر الميت هو أخفض نقطة على سطح الأرض. مياهه شديدة الملوحة مما يساعد على الطفو بسهولة، ويشتهر بالمعادن الطبيعية المفيدة.",
+                      placeLat: 31.5590,
+                      placeLng: 35.4732,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-          PlaceCard(
-            title: "Aqaba",
-            description: "Coastal city with beautiful beaches.",
-            imagePath: "assets/images/aqapa1.jpg", // اسم الصورة عندك مكتوب aqapa
-            onTap: () {
-              // فتح صفحة تفاصيل العقبة
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PlaceDetailsPage(
-                    title: "Aqaba",
-                    imagePath: "assets/images/aqapa1.jpg",
-                    details:
-                        "Aqaba is Jordan’s coastal city on the Red Sea. It is famous for beaches, snorkeling, diving, and relaxing sea activities.",
+                );
+              },
+            ),
+            PlaceCard(
+              title: "العقبة",
+              description: "مدينة ساحلية بشواطئ جميلة على البحر الأحمر.",
+              imagePath: "assets/images/aqapa1.jpg",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PlaceDetailsPage(
+                      title: "العقبة",
+                      imagePath: "assets/images/aqapa1.jpg",
+                      details:
+                          "العقبة هي مدينة الأردن الساحلية على البحر الأحمر. تشتهر بالشواطئ والغطس والسنوركلينغ والأنشطة البحرية الممتعة.",
+                      placeLat: 29.5321,
+                      placeLng: 35.0063,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -132,6 +142,10 @@ class PlaceCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -149,14 +163,24 @@ class PlaceCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 6),
-                  Text(description),
-                  const SizedBox(height: 6),
+                  Text(
+                    description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 8),
                   const Text(
-                    "Tap to view details", // تنبيه بسيط للمستخدم أنه يمكن الضغط لرؤية التفاصيل
-                    style: TextStyle(fontSize: 12),
+                    "اضغط لعرض التفاصيل",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
