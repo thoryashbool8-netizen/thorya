@@ -40,7 +40,7 @@ class _VideoPageState extends State<VideoPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("✅ تم فتح الاختبار! يمكنك الدخول الآن."),
+        content: Text(" تم فتح الاختبار! يمكنك الدخول الآن."),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -64,7 +64,7 @@ class _VideoPageState extends State<VideoPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              // ✅ كرت الفيديو
+              //  كرت الفيديو
               Card(
                 elevation: 6,
                 shape: RoundedRectangleBorder(
@@ -87,7 +87,7 @@ class _VideoPageState extends State<VideoPage> {
 
               const SizedBox(height: 16),
 
-              // ✅ حالة الفيديو
+              //  حالة الفيديو
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -110,7 +110,7 @@ class _VideoPageState extends State<VideoPage> {
 
               const SizedBox(height: 20),
 
-              // ✅ زر تشغيل/إيقاف واضح
+              //  زر تشغيل/إيقاف واضح
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -128,7 +128,7 @@ class _VideoPageState extends State<VideoPage> {
 
               const SizedBox(height: 12),
 
-              // ✅ زر فتح الاختبار (واضح جداً)
+              //  زر فتح الاختبار 
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -148,7 +148,7 @@ class _VideoPageState extends State<VideoPage> {
 
               const SizedBox(height: 14),
 
-              //  ملاحظة صغيرة للمستخدم
+              //  ملاحظة للمستخدم
               const Text(
                 "بعد إنهاء مشاهدة الفيديو اضغط زر (أنهيت المشاهدة) لفتح الاختبار.",
                 textAlign: TextAlign.center,

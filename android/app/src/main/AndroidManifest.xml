@@ -7,6 +7,19 @@
     <!-- صلاحية الميكروفون -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
+    <!-- صلاحية الكاميرا -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <!-- ✅ صلاحيات حفظ الوسائط في المعرض -->
+    <!-- Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
+    <!-- Android 12 وما قبل (اختياري لكن مفيد لبعض الأجهزة/البلجنات) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+
     <application
         android:label="tourism_app"
         android:name="${applicationName}"

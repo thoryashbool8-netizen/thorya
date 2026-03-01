@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'video_page.dart';
 import 'places_page.dart';
@@ -7,6 +8,8 @@ import 'quiz_page.dart';
 import 'app_state.dart';
 import 'location_page.dart';
 import 'audio_page.dart';
+import 'camera_page.dart';
+import 'favorites_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future<void> _goToVideo(BuildContext context) async {
+    HapticFeedback.selectionClick();
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const VideoPage()),
@@ -25,7 +29,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openQuiz(BuildContext context) {
+    HapticFeedback.selectionClick();
+
     if (!AppState.watchedVideo) {
+      HapticFeedback.vibrate();
+
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -33,11 +41,15 @@ class _HomePageState extends State<HomePage> {
           content: const Text("يجب مشاهدة الفيديو أولاً"),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                Navigator.pop(context);
+              },
               child: const Text("حسناً"),
             ),
             ElevatedButton(
               onPressed: () async {
+                HapticFeedback.selectionClick();
                 Navigator.pop(context);
                 await _goToVideo(context);
               },
@@ -55,7 +67,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openFavorites(BuildContext context) {
+    HapticFeedback.selectionClick();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const FavoritesPage()),
+    );
+  }
+
   void _openLocation(BuildContext context) {
+    HapticFeedback.selectionClick();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const LocationPage()),
@@ -63,9 +84,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openAudio(BuildContext context) {
+    HapticFeedback.selectionClick();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AudioPage()),
+    );
+  }
+
+  void _openCamera(BuildContext context) {
+    HapticFeedback.selectionClick();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CameraPage()),
+    );
+  }
+
+  void _openPlaces(BuildContext context) {
+    HapticFeedback.selectionClick();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PlacesPage()),
+    );
+  }
+
+  void _openRating(BuildContext context) {
+    HapticFeedback.selectionClick();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const RatingPage()),
     );
   }
 
@@ -81,7 +127,14 @@ class _HomePageState extends State<HomePage> {
         disabled ? Colors.grey.withOpacity(0.1) : color.withOpacity(0.15);
 
     return InkWell(
-      onTap: disabled ? null : onTap,
+      onTap: disabled
+          ? () {
+              HapticFeedback.vibrate();
+            }
+          : () {
+              HapticFeedback.selectionClick();
+              onTap();
+            },
       borderRadius: BorderRadius.circular(25),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -117,7 +170,6 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🔥 صورة كبيرة 70% من الشاشة
             Stack(
               children: [
                 Image.asset(
@@ -126,8 +178,6 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
-
-                // تدرج غامق خفيف لاحترافية أكثر
                 Container(
                   height: MediaQuery.of(context).size.height * 0.7,
                   decoration: const BoxDecoration(
@@ -141,8 +191,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
-                // عنوان فوق الصورة
                 Positioned(
                   bottom: 30,
                   left: 20,
@@ -170,9 +218,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-
-            const SizedBox(height: 20),
-
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -187,72 +233,60 @@ class _HomePageState extends State<HomePage> {
                       color: quizLocked ? Colors.red : Colors.green,
                     ),
                   ),
+                  const SizedBox(height: 16),
 
-                  const SizedBox(height: 20),
-
-                  // ✅ ترتيب منطقي للأزرار
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
                     alignment: WrapAlignment.center,
                     children: [
-                      // 1) فيديو
                       _smallButton(
                         title: "فيديو",
                         icon: Icons.play_circle,
                         color: const Color(0xFF6C5CE7),
                         onTap: () => _goToVideo(context),
                       ),
-
-                      // 2) Quiz (بعد الفيديو)
                       _smallButton(
                         title: "Quiz",
                         icon: Icons.quiz,
                         color: const Color(0xFF2ECC71),
-                        disabled: quizLocked,
                         onTap: () => _openQuiz(context),
                       ),
-
-                      // 3) المعالم
                       _smallButton(
                         title: "المعالم",
                         icon: Icons.place,
                         color: const Color(0xFF0984E3),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const PlacesPage()),
-                          );
-                        },
+                        onTap: () => _openPlaces(context),
                       ),
-
-                      // 4) موقعي
+                      _smallButton(
+                        title: "المفضلة",
+                        icon: Icons.star,
+                        color: const Color(0xFFF1C40F),
+                        onTap: () => _openFavorites(context),
+                      ),
                       _smallButton(
                         title: "موقعي",
                         icon: Icons.my_location,
                         color: const Color(0xFF00B894),
                         onTap: () => _openLocation(context),
                       ),
-
-                      // 5) ميكروفون
                       _smallButton(
                         title: "ميكروفون",
                         icon: Icons.mic,
                         color: const Color(0xFFE17055),
                         onTap: () => _openAudio(context),
                       ),
-
-                      // 6) تقييم
+                      _smallButton(
+                        title: "كاميرا",
+                        icon: Icons.camera_alt,
+                        color: const Color(0xFF111111),
+                        onTap: () => _openCamera(context),
+                      ),
                       _smallButton(
                         title: "تقييم",
-                        icon: Icons.star,
+                        icon: Icons.star_rate,
                         color: const Color(0xFFE84393),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const RatingPage()),
-                          );
-                        },
+                        onTap: () => _openRating(context),
                       ),
                     ],
                   ),

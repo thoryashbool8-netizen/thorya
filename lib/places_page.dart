@@ -7,7 +7,7 @@ class PlacesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl, // ✅ اتجاه عربي
+      textDirection: TextDirection.rtl, 
       child: Scaffold(
         appBar: AppBar(
           title: const Text("المعالم السياحية"),

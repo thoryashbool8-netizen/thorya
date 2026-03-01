@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 
 class LocationPage extends StatefulWidget {
   const LocationPage({super.key});
@@ -16,6 +17,9 @@ class _LocationPageState extends State<LocationPage> {
   Future<void> getLocation() async {
     if (loading) return;
 
+    // ✅ نقرة خفيفة عند الضغط على الزر
+    HapticFeedback.selectionClick();
+
     setState(() {
       loading = true;
       status = "جارٍ التحقق من إعدادات الموقع...";
@@ -24,6 +28,9 @@ class _LocationPageState extends State<LocationPage> {
 
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      // ✅ تنبيه اهتزاز لأن GPS مطفي
+      HapticFeedback.vibrate();
+
       setState(() {
         loading = false;
         status =
@@ -38,6 +45,9 @@ class _LocationPageState extends State<LocationPage> {
     }
 
     if (permission == LocationPermission.denied) {
+      // ✅ تنبيه اهتزاز لأن الإذن مرفوض
+      HapticFeedback.vibrate();
+
       setState(() {
         loading = false;
         status = "تم رفض إذن الوصول إلى الموقع.";
@@ -46,6 +56,9 @@ class _LocationPageState extends State<LocationPage> {
     }
 
     if (permission == LocationPermission.deniedForever) {
+      // ✅ تنبيه اهتزاز لأن الإذن مرفوض بشكل دائم
+      HapticFeedback.vibrate();
+
       setState(() {
         loading = false;
         status =
@@ -61,12 +74,18 @@ class _LocationPageState extends State<LocationPage> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
+      // ✅ اهتزاز نجاح عند تحديد الموقع
+      HapticFeedback.mediumImpact();
+
       setState(() {
         pos = p;
         loading = false;
         status = "تم تحديد موقعك بنجاح.";
       });
     } catch (e) {
+      // ✅ اهتزاز تنبيه عند الخطأ
+      HapticFeedback.vibrate();
+
       setState(() {
         loading = false;
         status = "حدث خطأ أثناء محاولة تحديد الموقع.";
@@ -115,9 +134,7 @@ class _LocationPageState extends State<LocationPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
-
               if (pos != null)
                 Card(
                   elevation: 4,
@@ -131,15 +148,16 @@ class _LocationPageState extends State<LocationPage> {
                         _infoRow("خط العرض", pos!.latitude.toStringAsFixed(6)),
                         _infoRow("خط الطول", pos!.longitude.toStringAsFixed(6)),
                         _infoRow(
-                            "دقة التحديد", "${pos!.accuracy.toStringAsFixed(0)} متر"),
+                          "دقة التحديد",
+                          "${pos!.accuracy.toStringAsFixed(0)} متر",
+                        ),
                       ],
                     ),
                   ),
                 ),
-
               const Spacer(),
 
-              //  زر واضح ورسمي
+              // زر الموقع الحالي
               SizedBox(
                 width: double.infinity,
                 height: 58,
@@ -147,9 +165,7 @@ class _LocationPageState extends State<LocationPage> {
                   onPressed: getLocation,
                   icon: const Icon(Icons.gps_fixed, size: 26),
                   label: Text(
-                    loading
-                        ? "جارٍ تحديد الموقع..."
-                        : "تحديد موقعي الحالي",
+                    loading ? "جارٍ تحديد الموقع..." : "تحديد موقعي الحالي",
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,

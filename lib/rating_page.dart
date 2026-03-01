@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 class RatingPage extends StatefulWidget {
   const RatingPage({super.key});
@@ -24,6 +25,18 @@ class _RatingPageState extends State<RatingPage> {
       _rating = value;
     });
 
+    // ✅ اهتزاز حسب قيمة التقييم
+    if (value >= 4.5) {
+      HapticFeedback.heavyImpact(); // قوي جداً
+    } else if (value >= 4) {
+      HapticFeedback.mediumImpact(); // متوسط
+    } else if (value >= 3) {
+      HapticFeedback.lightImpact(); // خفيف
+    } else {
+      HapticFeedback.vibrate(); // تنبيه عادي
+    }
+
+    // ✅ صوت التصفيق للتقييم العالي
     if (value >= 4) {
       await _player.stop();
       await _player.play(AssetSource('audio/clap.mp3'));
@@ -68,9 +81,7 @@ class _RatingPageState extends State<RatingPage> {
                     size: 60,
                     color: Colors.amber,
                   ),
-
                   const SizedBox(height: 20),
-
                   const Text(
                     "قيّم تجربتك معنا",
                     style: TextStyle(
@@ -79,26 +90,21 @@ class _RatingPageState extends State<RatingPage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-
                   const SizedBox(height: 30),
-
                   RatingBar.builder(
                     initialRating: _rating,
                     minRating: 1,
                     allowHalfRating: true,
                     itemCount: 5,
                     itemSize: 36,
-                    itemPadding:
-                        const EdgeInsets.symmetric(horizontal: 6),
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 6),
                     itemBuilder: (context, _) => const Icon(
                       Icons.star,
                       color: Colors.amber,
                     ),
                     onRatingUpdate: _handleRating,
                   ),
-
                   const SizedBox(height: 25),
-
                   Text(
                     "تقييمك: ${_rating.toStringAsFixed(1)} / 5",
                     style: const TextStyle(
@@ -106,9 +112,7 @@ class _RatingPageState extends State<RatingPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   Text(
                     _ratingMessage(),
                     style: const TextStyle(

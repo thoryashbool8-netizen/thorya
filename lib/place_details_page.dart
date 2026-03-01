@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'favorites_service.dart';
 
 class PlaceDetailsPage extends StatefulWidget {
   final String title;
   final String imagePath;
   final String details;
 
-  //  إحداثيات المكان
+  // إحداثيات المكان
   final double placeLat;
   final double placeLng;
 
@@ -26,6 +27,42 @@ class PlaceDetailsPage extends StatefulWidget {
 class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
   String distanceText = "اضغط لحساب المسافة";
   bool loading = false;
+
+  bool isFav = false;
+  bool favLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorite();
+  }
+
+  Future<void> _loadFavorite() async {
+    final v = await FavoritesService.isFavorite(widget.title);
+    if (!mounted) return;
+    setState(() {
+      isFav = v;
+      favLoading = false;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    setState(() => favLoading = true);
+    final nowFav = await FavoritesService.toggle(widget.title);
+
+    if (!mounted) return;
+    setState(() {
+      isFav = nowFav;
+      favLoading = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(nowFav ? "تمت الإضافة للمفضلة ⭐" : "تمت الإزالة من المفضلة"),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
 
   Future<void> calcDistance() async {
     setState(() {
@@ -81,7 +118,7 @@ class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
 
       setState(() {
         loading = false;
-        distanceText = " يبعد عنك: ${km.toStringAsFixed(2)} كم";
+        distanceText = "يبعد عنك: ${km.toStringAsFixed(2)} كم";
       });
     } catch (e) {
       setState(() {
@@ -94,14 +131,37 @@ class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          favLoading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  tooltip: isFav ? "إزالة من المفضلة" : "إضافة للمفضلة",
+                  icon: Icon(isFav ? Icons.star : Icons.star_border),
+                  onPressed: _toggleFavorite,
+                ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child:
-                Image.asset(widget.imagePath, height: 260, fit: BoxFit.cover),
+            child: Image.asset(
+              widget.imagePath,
+              height: 260,
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(height: 16),
           Text(
@@ -110,7 +170,7 @@ class _PlaceDetailsPageState extends State<PlaceDetailsPage> {
           ),
           const SizedBox(height: 12),
 
-          // ✅ كرت المسافة
+          // كرت المسافة
           Card(
             child: ListTile(
               leading: const Icon(Icons.my_location),

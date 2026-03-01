@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 class QuizQuestion {
   final String question;
@@ -62,24 +63,35 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Future<void> selectAnswer(int i) async {
-    // إذا المستخدم اختار إجابة من قبل، لا يمكنه ان يختار مرة ثانية لنفس السؤال
+    // إذا المستخدم اختار إجابة من قبل، لا يمكنه يختار مرة ثانية لنفس السؤال
     if (selectedOption != null) return;
 
     setState(() => selectedOption = i);
 
     final isCorrect = i == questions[currentIndex].correctIndex;
+
     if (isCorrect) {
       score++;
 
-      // عند الإجابة الصحيحة نشغل صوت تشجيعي بسيط
+      // ✅ اهتزاز قوي عند الإجابة الصحيحة
+      HapticFeedback.heavyImpact();
+
+      // ✅ صوت تشجيعي عند الإجابة الصحيحة
       await _player.stop();
       await _player.play(AssetSource('audio/cheer.mp3'));
+    } else {
+      // ✅ اهتزاز تنبيه عند الإجابة الخاطئة
+      HapticFeedback.vibrate();
     }
   }
 
   void nextQuestion() {
-    // م لا ينتقل للسؤال الذي بعده إلا إذا المستخدم اختيار إجابة
-    if (selectedOption == null) return;
+    // ✅ لا ينتقل للسؤال الذي بعده إلا إذا المستخدم اختار إجابة
+    if (selectedOption == null) {
+      // اهتزاز خفيف للتنبيه
+      HapticFeedback.selectionClick();
+      return;
+    }
 
     if (currentIndex < questions.length - 1) {
       setState(() {
@@ -163,9 +175,10 @@ class _QuizResultPageState extends State<QuizResultPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // إذا كانت النتيجة ممتازة (4 من 5 أو أكثر) نشغل صوت تصفيق مرة واحدة فقط
+    // ✅ إذا كانت النتيجة ممتازة (4 من 5 أو أكثر) تشغل صوت + اهتزاز مرة واحدة فقط
     if (!_played && widget.score >= 4) {
       _played = true;
+      HapticFeedback.heavyImpact();
       _player.play(AssetSource('audio/clap.mp3'));
     }
   }
@@ -192,7 +205,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                widget.score >= 4 ? "🎉 ممتاز!" : "👍 حاول مرة ثانية!",
+                widget.score >= 4 ? "🎉 ممتاز!" : "حاول مرة ثانية!",
                 style: const TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 18),
